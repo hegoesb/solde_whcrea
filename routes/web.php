@@ -18,12 +18,11 @@ Route::get('/copierDeplacerPlan', 'CronController@copiePlanChantier');
 
 /*
 |--------------------------------------------------------------------------
-| Ajouter
+| Ecritures Bancaires (eb)
 |--------------------------------------------------------------------------
 */
 
-Route::get('ajouter/{entreprise_id}/{table}', 'AjouterController@viewAjouter');
-Route::post('ajouter/{entreprise_id}/{table}', 'AjouterController@postAjouter');
+Route::get('eb/{table}', 'TableauController@viewTable');
 
 /*
 |--------------------------------------------------------------------------

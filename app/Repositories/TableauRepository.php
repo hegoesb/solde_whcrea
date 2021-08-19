@@ -13,6 +13,8 @@ use App\Models\facture;
 use App\Models\facture_reglement;
 use App\Models\reglement;
 
+use App\Models\llx_bank;
+
 class TableauRepository {
 
 	protected $parametre;
@@ -29,6 +31,42 @@ class TableauRepository {
 
         return $data;
 	}
+
+  //-------------------------
+  // Chantier
+  //-------------------------
+
+  public function bank_table($table)
+  {
+    if($table == 'toutes'){
+      $banks=llx_bank::get();
+    }else{
+      $banks=llx_bank::whereYear('dateo', '=', $table)->get();
+    }
+
+    if(isset($banks[0])){
+      foreach ($banks as $key => $bank) {
+        $data[$key]['id']    = $bank->rowid;
+        $data[$key]['dateo'] = $bank->dateo;
+        if($bank->amount<0){
+          $data[$key]['debit']  = $bank->amount;
+          $data[$key]['credit'] = 0;
+        }else{
+          $data[$key]['debit']  = 0;
+          $data[$key]['credit'] = $bank->amount;
+        }
+        $data[$key]['label']        = $bank->label;
+        $data[$key]['num_releve']   = $bank['num_releve'];
+        $data[$key]['depense_par']  = $bank['depense_par'];
+        $data[$key]['type_depense'] = $bank['type_depense'];
+        $data[$key]['projet']       = $bank['projet'];
+      }
+    }else{
+      $data=null;
+    }
+
+    return $data;
+  }
 
   //-------------------------
   // Chantier

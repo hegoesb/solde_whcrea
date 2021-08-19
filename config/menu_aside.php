@@ -21,33 +21,37 @@ return [
         ],
         // Edis Bordeaux
         [
-            'section' => 'EDIS Bordeaux',
+            'section' => 'EDIS ENR (WHCREA)',
         ],
         [
-            'title' => 'Ajouter',
+            'title' => 'Ecritures Bancaires',
             'icon' => 'media/svg/icons/Design/PenAndRuller.svg',
             'bullet' => 'dot',
             'root' => true,
             'submenu' => [
                 [
-                    'title' => 'Clients',
-                    'page' => 'ajouter/1/clients'
+                    'title' => 'Toutes',
+                    'page' => 'eb/toutes'
                 ],
                 [
-                    'title' => 'Chantiers',
-                    'page' => 'ajouter/1/chantiers'
+                    'title' => '2021',
+                    'page' => 'eb/2021'
                 ],
                 [
-                    'title' => 'Devis',
-                    'page' => 'ajouter/1/devis'
+                    'title' => '2020',
+                    'page' => 'eb/2020'
                 ],
                 [
-                    'title' => 'Factures',
-                    'page' => 'ajouter/1/factures'
+                    'title' => '2019',
+                    'page' => 'eb/2019'
                 ],
                 [
-                    'title' => 'Réglements',
-                    'page' => 'ajouter/1/reglements'
+                    'title' => '2018',
+                    'page' => 'eb/2018'
+                ],
+                [
+                    'title' => '2017',
+                    'page' => 'eb/2017'
                 ],
             ]
         ],

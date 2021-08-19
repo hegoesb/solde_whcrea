@@ -21,10 +21,23 @@ class TableauController extends Controller
         $this->tableauRepository = $TableauRepository;
     }
 
-    public function viewTable($entreprise_id,$table)
+    public function viewTable($table)
     {
 
-        $entreprise=entreprise::where('id',$entreprise_id)->first();
+        $bank = $this->tableauRepository->bank_table($table);
+
+        // return view('test', ['test' =>  $bank, 'imputs' => '$a', 'comp' => '$table'.' ']);
+
+
+        return view($this->chemin.'banks_datatables',[
+            'titre'         => 'EDIS ENR (WHCREA) - Ecritures Bancaire - '.$table,
+            'descriptif'    => 'Liste des clients appartenant aux deux entreprises',
+            'data'          => $bank,
+            'colonne_order' => 2,
+            'ordre'         => "desc",
+        ]);
+
+
 
         if($table=='clients'){
           $entreprises=entreprise::get();
