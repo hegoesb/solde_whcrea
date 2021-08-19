@@ -33,7 +33,7 @@ class TableauRepository {
 	}
 
   //-------------------------
-  // Chantier
+  // Bank
   //-------------------------
 
   public function bank_table($table)
@@ -69,38 +69,177 @@ class TableauRepository {
   }
 
   //-------------------------
+  // Repartition
+  //-------------------------
+
+  public function repartition_table()
+  {
+    $dates= array(2017,2018,2019,2020,2021);
+    $lignes = array('WHCrea','Commun', 'Fabien', 'Remi', 'F+C', 'R+C');
+    $recherche[0]['nom'] = 'WHCrea';
+    $recherche[0]['initial'] = '';
+    $recherche[0]['id'] = 1;
+    $recherche[1]['nom'] = 'Commun';
+    $recherche[1]['initial'] = 'RF';
+    $recherche[1]['id'] = 2;
+    $recherche[2]['nom'] = 'Fabien';
+    $recherche[2]['initial'] = 'F';
+    $recherche[2]['id'] = 3;
+    $recherche[3]['nom'] = 'Remi';
+    $recherche[3]['initial'] = 'R';
+    $recherche[3]['id'] = 4;
+
+
+
+    foreach ($dates as $key_d => $date) {
+      foreach ($recherche as $key_r => $r) {
+        $data[$r['nom']]['id'][0]=$r['id'];
+        $data[$r['nom']]['nom'][0]=$r['nom'];
+        if ($r['nom']=='WHCrea') {
+         $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->sum('amount'),2);
+
+        }elseif ($r['nom']=='Commun') {
+         $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->where('depense_par',$r['initial'])->sum('amount'),2);
+          if ($r['nom']!='Commun') {
+            $data[$date][$r['nom'].' + Commun'][0]=$data[$date][$r['nom']]+($data[$date]['Commun']/2);
+          }
+        }elseif ($r['nom']=='Fabien') {
+         $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->where('depense_par',$r['initial'])->sum('amount'),2);
+         $data['F+C']['nom'][0]='F+C';
+         $data['F+C']['id'][0]=7;
+         $data['F+C'][$date][0]=$data[$r['nom']][$date][0]+($data['Commun'][$date][0]/2);
+        }elseif ($r['nom']=='Remi') {
+         $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->where('depense_par',$r['initial'])->sum('amount'),2);
+         $data['R+C']['nom'][0]='R+C';
+         $data['R+C']['id'][0]=8;
+         $data['R+C'][$date][0]=$data[$r['nom']][$date][0]+($data['Commun'][$date][0]/2);
+        }
+      }
+
+    }
+
+    // TVA Récupéré
+
+    $tva_r_2017 = -round(llx_bank::whereYear('dateo', '=', 2017)->where('type_depense','Magie+Bière')->sum('amount')/1.2*0.2,2);
+    $tva_r_2018 = -round(llx_bank::whereYear('dateo', '=', 2018)->where('type_depense','Magie+Bière')->sum('amount')/1.2*0.2,2);
+    $tva_recup_2019 = round(llx_bank::where('rowid',762)->sum('amount'),2);
+    $tva_f_2020 = -round(llx_bank::whereYear('dateo', '=', 2020)->where('depense_par','F')->where('type_depense','Informatique-Téléphone')->sum('amount')/1.2*0.2,2);
+    $tva_r_2020 = round(llx_bank::whereYear('dateo', '=', 2020)->where('type_depense','TVA')->sum('amount'),2);
+    $tva_r_2020_12 = -round(llx_bank::whereYear('dateo', '=', 2020)->whereMonth('dateo', '=', 12)->where('type_depense','Brasserie')->sum('amount')/1.2*0.2,2);
+    $tva_r_2021 = -round(llx_bank::whereYear('dateo', '=', 2021)->where('depense_par','R')->where('type_depense','Brasserie')->sum('amount')/1.2*0.2,2);
+    $tva_f_2021 = -round(llx_bank::whereYear('dateo', '=', 2021)->where('depense_par','F')->where('type_depense','!=', 'Compte Associé')->sum('amount')/1.2*0.2,2);
+
+    //Remi
+
+
+    $data['TVA_R']['nom'][0]='TVA Remi';
+    $data['TVA_R']['id'][0]=6;
+    $data['TVA_R'][2017][0]=0;
+    $data['TVA_R'][2017][1]='Pas de TVA récuperée';
+    $data['TVA_R'][2018][0]=0;
+    $data['TVA_R'][2018][1]='Pas de TVA récuperée';
+    $data['TVA_R'][2019][0]=$tva_r_2017+$tva_r_2018;
+    $data['TVA_R'][2019][1]='TVA de 2017 et 2018';
+    $data['TVA_R'][2020][0]=$tva_r_2020-$tva_f_2020;
+    $data['TVA_R'][2020][1]='TVA 2020 recup ='.$tva_r_2020.'€ - TVA Fabien';
+    $data['TVA_R'][2021][0]=$tva_r_2021+$tva_r_2020_12+$tva_f_2021;
+    $data['TVA_R'][2021][1]='TVA Non Pris En compte : 2020_12 ('.$tva_r_2020_12.'€) + 2021 ('.$tva_r_2021.'€) - TVA Fabien='.$data['TVA_R'][2021][0].'€';
+
+    $data['R+C'][2019][0]=$data['R+C'][2019][0]+$data['TVA_R'][2019][0];
+    $data['Remi'][2019][0]=$data['Remi'][2019][0]+$data['TVA_R'][2019][0];
+    $data['R+C'][2020][0]=$data['R+C'][2020][0]-$tva_f_2020;
+    $data['Remi'][2020][0]=$data['Remi'][2020][0]-$tva_f_2020;
+    //Fabien
+
+    $data['TVA_F']['nom'][0]='TVA Fabien';
+    $data['TVA_F']['id'][0]=5;
+    $data['TVA_F'][2017][0]=0;
+    $data['TVA_F'][2017][1]='Pas de TVA récuperée';
+    $data['TVA_F'][2018][0]=0;
+    $data['TVA_F'][2018][1]='Pas de TVA récuperée';
+    $data['TVA_F'][2019][0]=$tva_recup_2019-$data['TVA_R'][2019][0];
+    $data['TVA_F'][2019][1]='TVA de 2017 et 2018 ='.$tva_recup_2019.'€ - TVA Remi';
+    $data['TVA_F'][2020][0]=$tva_f_2020;
+    $data['TVA_F'][2020][1]='TVA -> INFORMATIQUE ET TELEPHONE';
+    $data['TVA_F'][2021][0]=$tva_f_2021;
+    $data['TVA_F'][2021][1]='TVA -> INFORMATIQUE ET TELEPHONE + Culture Comptable';
+
+    $data['F+C'][2019][0]=$data['F+C'][2019][0]-$data['TVA_R'][2019][0];
+    $data['Fabien'][2019][0]=$data['Fabien'][2019][0]-$data['TVA_R'][2019][0];
+    $data['F+C'][2020][0]=$data['F+C'][2020][0]+$tva_f_2020;
+    $data['Fabien'][2020][0]=$data['Fabien'][2020][0]+$tva_f_2020;
+    $data['F+C'][2021][0]=$data['F+C'][2021][0]+$tva_f_2021;
+    $data['Fabien'][2021][0]=$data['Fabien'][2021][0]+$tva_f_2021;
+
+    foreach ($data as $key_da => $da) {
+        $data[$key_da]['total'][0]=0;
+      foreach ($dates as $key_d => $date) {
+        $data[$key_da]['total'][0]=$data[$key_da]['total'][0]+$da[$date][0];
+      }
+    }
+
+
+
+
+
+    return $data;
+  }
+
+  //-------------------------
   // Chantier
   //-------------------------
 
-  public function chantier_table($entreprise)
+  public function solde_table($data)
   {
 
-    $chantiers=chantier::with('client','etape_chantier')->where('entreprise_id',$entreprise->id)->get();
+    //fabien
 
-    if(isset($chantiers[0])){
-      foreach ($chantiers as $key => $chantier) {
-        $data[$key]['id']                             = $chantier->id;
-        $data[$key]['identifiant']                    = $chantier->identifiant;
-        $data[$key]['nom']                            = $chantier->nom;
-        $data[$key]['libelle']                        = $chantier->libelle;
-        $data[$key]['client']['nom']                  = $chantier['client']['nom'];
-        $data[$key]['client']['nom_display']          = $chantier['client']['nom_display'];
-        $data[$key]['etape_chantier']['nom']           = $chantier['etape_chantier']['nom'];
-        $data[$key]['etape_chantier']['nom_display']   = $chantier['etape_chantier']['nom_display'];
-        $data[$key]['etape_chantier']['color']         = $chantier['etape_chantier']['color'];
-        $data[$key]['etape_chantier']['lien_modifier'] = '/supprimer/'.$entreprise->id.'/etape_chantier/'.$chantier->id;
-        $data[$key]['date_debut']                     = $chantier->date_debut;
-        $devi = devi::where('entreprise_id',$entreprise->id)->where('chantier_id',$chantier->id)->first();
-        if(!isset($devi)){
-          $data[$key]['supprimer']='/supprimer/'.$entreprise->id.'/chantiers/'.$chantier->id;
-        }else{
-          $data[$key]['supprimer']=null;
-        }
+    $solde['Fabien']['nom']='Fabien';
+    $solde['Fabien']['Solde'][0]=round($data['F+C']['total'][0],2);
+    $solde['Fabien']['Solde'][1]='Solde au 14 Août 2021';
+    $solde['Fabien']['Solde'][2]='media/svg/icons/Home/Home.svg';
+    $solde['Fabien']['Dépense'][1][0]=-675.00;
+    $solde['Fabien']['Dépense'][1][1]='Loyer Trimestre 2 - 2020 (HT)';
+    $solde['Fabien']['Dépense'][1][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Fabien']['Dépense'][2][0]=-675.00;
+    $solde['Fabien']['Dépense'][2][1]='Loyer Trimestre 3 - 2020 (HT)';
+    $solde['Fabien']['Dépense'][2][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Fabien']['Dépense'][3][0]=-675.00;
+    $solde['Fabien']['Dépense'][3][1]='Loyer Trimestre 4 - 2020 (HT)';
+    $solde['Fabien']['Dépense'][3][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Fabien']['Dépense'][4][0]=-675.00;
+    $solde['Fabien']['Dépense'][4][1]='Loyer Trimestre 1 - 2021 (HT)';
+    $solde['Fabien']['Dépense'][4][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Fabien']['Dépense'][5][0]=-450/2;
+    $solde['Fabien']['Dépense'][5][1]='Facture culture comptable - 450€ (HT) - Commun';
+    $solde['Fabien']['Dépense'][5][2]='media/svg/icons/Home/Wood-horse.svg';
+
+    //remi
+
+    $solde['Remi']['nom']='Remi';
+    $solde['Remi']['Solde'][0]=round($data['R+C']['total'][0],2);
+    $solde['Remi']['Solde'][1]='Solde au 14 Août 2021';
+    $solde['Remi']['Solde'][2]='media/svg/icons/Home/Home.svg';
+    $solde['Remi']['Dépense'][1][0]=3750.00;
+    $solde['Remi']['Dépense'][1][1]='Depôt de garantie (HT)';
+    $solde['Remi']['Dépense'][1][2]='media/svg/icons/Food/Carrot.svg';
+    $solde['Remi']['Dépense'][2][0]=-2942.00;
+    $solde['Remi']['Dépense'][2][1]='TVA à payer régule Brasserie';
+    $solde['Remi']['Dépense'][2][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Remi']['Dépense'][3][0]=-450/2;
+    $solde['Remi']['Dépense'][3][1]='Facture culture comptable - 450€ (HT) - Commun';
+    $solde['Remi']['Dépense'][3][2]='media/svg/icons/Home/Wood-horse.svg';
+
+    foreach ($solde as $key_s => $noms) {
+      $solde[$key_s]['Solde_F'][0]=$solde[$key_s]['Solde'][0];
+      foreach ($noms['Dépense'] as $key_n => $value) {
+          $solde[$key_s]['Solde_F'][0]=round($solde[$key_s]['Solde_F'][0]+$value[0],2);
       }
-    }else{
-      $data=null;
     }
-    return $data;
+
+
+
+    return $solde;
   }
 
   //-------------------------

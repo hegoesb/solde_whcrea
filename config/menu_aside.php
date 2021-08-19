@@ -12,20 +12,13 @@ return [
             'new-tab' => false,
         ],
 
-        [
-            'title' => 'Copier/Deplacer Plan',
-            'root' => true,
-            'icon' => 'media/svg/icons/Design/Bezier-curve.svg', // or can be 'flaticon-home' or any flaticon-*
-            'page' => '/copierDeplacerPlan',
-            'new-tab' => false,
-        ],
         // Edis Bordeaux
         [
             'section' => 'EDIS ENR (WHCREA)',
         ],
         [
             'title' => 'Ecritures Bancaires',
-            'icon' => 'media/svg/icons/Design/PenAndRuller.svg',
+            'icon' => 'media/svg/icons/Shopping/Chart-bar2.svg',
             'bullet' => 'dot',
             'root' => true,
             'submenu' => [
@@ -56,50 +49,19 @@ return [
             ]
         ],
         [
-            'title' => 'Tableaux',
-            'icon' => 'media/svg/icons/Layout/Layout-left-panel-2.svg',
-            'bullet' => 'dot',
+            'title' => 'Repartition',
             'root' => true,
-            'submenu' => [
-                [
-                    'title' => 'Clients',
-                    'page' => 'tableau/1/clients'
-                ],
-                [
-                    'title' => 'Chantiers',
-                    'page' => 'tableau/1/chantiers'
-                ],
-                [
-                    'title' => 'Devis',
-                    'page' => 'tableau/1/devis'
-                ],
-                [
-                    'title' => 'Factures',
-                    'page' => 'tableau/1/factures'
-                ],
-                [
-                    'title' => 'Réglements',
-                    'page' => 'tableau/1/reglements'
-                ],
-            ]
+            'icon' => 'media/svg/icons/Layout/Layout-left-panel-2.svg',
+            'page' => 'repartition',
+            'new-tab' => false,
         ],
         [
-            'title' => 'Documents',
-            'icon' => 'media/svg/icons/Files/Folder-cloud.svg',
-            'bullet' => 'dot',
+            'title' => 'Solde',
             'root' => true,
-            'submenu' => [
-                [
-                    'title' => 'Devis',
-                    'page' => 'document/1/devis'
-                ],
-                [
-                    'title' => 'Factures',
-                    'page' => 'document/1/factures'
-                ],
-            ]
+            'icon' => 'media/svg/icons/Cooking/Fork-spoon-knife.svg',
+            'page' => 'solde',
+            'new-tab' => false,
         ],
-
     ]
 
 ];

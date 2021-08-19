@@ -31,7 +31,7 @@ class TableauController extends Controller
 
         return view($this->chemin.'banks_datatables',[
             'titre'         => 'EDIS ENR (WHCREA) - Ecritures Bancaire - '.$table,
-            'descriptif'    => 'Liste des clients appartenant aux deux entreprises',
+            'descriptif'    => 'Liste des écritures bancaires',
             'data'          => $bank,
             'colonne_order' => 2,
             'ordre'         => "desc",
@@ -120,8 +120,48 @@ class TableauController extends Controller
 
     }
 
+    public function repartitionTable()
+    {
+
+        $bank = $this->tableauRepository->repartition_table();
+
+        // return view('test', ['test' =>  $bank, 'imputs' => '$a', 'comp' => '$table'.' ']);
 
 
+        return view($this->chemin.'repartition_datatables',[
+            'titre'         => 'EDIS ENR (WHCREA) - Répartition',
+            'descriptif'    => 'Répartition des dépenses',
+            'data'          => $bank,
+            'colonne_order' => 0,
+            'ordre'         => "asc",
+        ]);
+
+
+
+        abort(404);
+
+    }
+    public function soldeTable()
+    {
+
+        $bank = $this->tableauRepository->repartition_table();
+        $soldes = $this->tableauRepository->solde_table($bank);
+        // return view('test', ['test' =>  $soldes , 'imputs' => '$a', 'comp' => '$table'.' ']);
+
+
+        return view($this->chemin.'solde_datatables',[
+            'titre'         => 'EDIS ENR (WHCREA) - Répartition',
+            'descriptif'    => 'Répartition des dépenses',
+            'soldes'          => $soldes,
+            'colonne_order' => 0,
+            'ordre'         => "asc",
+        ]);
+
+
+
+        abort(404);
+
+    }
 
 
 

@@ -23,6 +23,8 @@ Route::get('/copierDeplacerPlan', 'CronController@copiePlanChantier');
 */
 
 Route::get('eb/{table}', 'TableauController@viewTable');
+Route::get('repartition', 'TableauController@repartitionTable');
+Route::get('solde', 'TableauController@soldeTable');
 
 /*
 |--------------------------------------------------------------------------
