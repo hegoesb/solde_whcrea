@@ -41,6 +41,7 @@
                         <th>2019</th>
                         <th>2020</th>
                         <th>2021</th>
+                        <th>2022</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -56,6 +57,7 @@
                                 <td @isset($value['2019'][1]) data-toggle="tooltip" data-theme="dark" title="{{$value['2019'][1]}}" @endisset>{{$value['2019'][0]}}</td>
                                 <td @isset($value['2020'][1]) data-toggle="tooltip" data-theme="dark" title="{{$value['2020'][1]}}" @endisset>{{$value['2020'][0]}}</td>
                                 <td @isset($value['2021'][1]) data-toggle="tooltip" data-theme="dark" title="{{$value['2021'][1]}}" @endisset>{{$value['2021'][0]}}</td>
+                                <td @isset($value['2022'][1]) data-toggle="tooltip" data-theme="dark" title="{{$value['2022'][1]}}" @endisset>{{$value['2022'][0]}}</td>
                                 <td @isset($value['total'][1]) data-toggle="tooltip" data-theme="dark" title="{{$value['total'][1]}}" @endisset>{{$value['total'][0]}}</td>
                             </tr>
                         @endforeach
@@ -70,6 +72,7 @@
                         <th>2019</th>
                         <th>2020</th>
                         <th>2021</th>
+                        <th>2022</th>
                         <th>Total</th>
                     </tr>
                 </tfoot>

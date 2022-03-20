@@ -27,6 +27,10 @@ return [
                     'page' => 'eb/toutes'
                 ],
                 [
+                    'title' => '2022',
+                    'page' => 'eb/2022'
+                ],
+                [
                     'title' => '2021',
                     'page' => 'eb/2021'
                 ],

@@ -74,7 +74,7 @@ class TableauRepository {
 
   public function repartition_table()
   {
-    $dates= array(2017,2018,2019,2020,2021);
+    $dates= array(2017,2018,2019,2020,2021,2022);
     $lignes = array('WHCrea','Commun', 'Fabien', 'Remi', 'F+C', 'R+C');
     $recherche[0]['nom'] = 'WHCrea';
     $recherche[0]['initial'] = '';
@@ -126,8 +126,11 @@ class TableauRepository {
     $tva_f_2020 = -round(llx_bank::whereYear('dateo', '=', 2020)->where('depense_par','F')->where('type_depense','Informatique-Téléphone')->sum('amount')/1.2*0.2,2);
     $tva_r_2020 = round(llx_bank::whereYear('dateo', '=', 2020)->where('type_depense','TVA')->sum('amount'),2);
     $tva_r_2020_12 = -round(llx_bank::whereYear('dateo', '=', 2020)->whereMonth('dateo', '=', 12)->where('type_depense','Brasserie')->sum('amount')/1.2*0.2,2);
-    $tva_r_2021 = -round(llx_bank::whereYear('dateo', '=', 2021)->where('depense_par','R')->where('type_depense','Brasserie')->sum('amount')/1.2*0.2,2);
-    $tva_f_2021 = -round(llx_bank::whereYear('dateo', '=', 2021)->where('depense_par','F')->where('type_depense','!=', 'Compte Associé')->sum('amount')/1.2*0.2,2);
+    $tva_r_2021 = -round(llx_bank::whereYear('dateo', '=', 2021)->where('depense_par','R')->where('type_depense','Brasserie')->where('type_depense','!=', 'TVA')->sum('amount')/1.2*0.2,2);
+    $tva_f_2021 = -round(llx_bank::whereYear('dateo', '=', 2021)->where('depense_par','F')->where('type_depense','!=', 'Salaire')->where('type_depense','!=', 'TVA')->where('type_depense','!=', 'Compte Associé')->sum('amount')/1.2*0.2,2);
+    //nouveau 27-02-22
+    $tva_r_2022 = -round(llx_bank::whereYear('dateo', '=', 2022)->where('depense_par','R')->where('type_depense','!=', 'TVA')->where('type_depense','Brasserie')->sum('amount')/1.2*0.2,2);
+    $tva_f_2022 = -round(llx_bank::whereYear('dateo', '=', 2022)->where('depense_par','F')->where('type_depense','!=', 'Salaire')->where('type_depense','!=', 'TVA')->where('type_depense','!=', 'Compte Associé')->sum('amount')/1.2*0.2,2);
 
     //Remi
 
@@ -142,8 +145,10 @@ class TableauRepository {
     $data['TVA_R'][2019][1]='TVA de 2017 et 2018';
     $data['TVA_R'][2020][0]=$tva_r_2020-$tva_f_2020;
     $data['TVA_R'][2020][1]='TVA 2020 recup ='.$tva_r_2020.'€ - TVA Fabien';
-    $data['TVA_R'][2021][0]=$tva_r_2021+$tva_r_2020_12+$tva_f_2021;
+    $data['TVA_R'][2021][0]=$tva_r_2021+$tva_r_2020_12-$tva_f_2021;
     $data['TVA_R'][2021][1]='TVA Non Pris En compte : 2020_12 ('.$tva_r_2020_12.'€) + 2021 ('.$tva_r_2021.'€) - TVA Fabien='.$data['TVA_R'][2021][0].'€';
+    //nouveau 27-02-22
+    $data['TVA_R'][2022][0]=$tva_r_2022;
 
     $data['R+C'][2019][0]=$data['R+C'][2019][0]+$data['TVA_R'][2019][0];
     $data['Remi'][2019][0]=$data['Remi'][2019][0]+$data['TVA_R'][2019][0];
@@ -163,6 +168,8 @@ class TableauRepository {
     $data['TVA_F'][2020][1]='TVA -> INFORMATIQUE ET TELEPHONE';
     $data['TVA_F'][2021][0]=$tva_f_2021;
     $data['TVA_F'][2021][1]='TVA -> INFORMATIQUE ET TELEPHONE + Culture Comptable';
+    //nouveau 27-02-22
+    $data['TVA_F'][2022][0]=$tva_f_2022;
 
     $data['F+C'][2019][0]=$data['F+C'][2019][0]-$data['TVA_R'][2019][0];
     $data['Fabien'][2019][0]=$data['Fabien'][2019][0]-$data['TVA_R'][2019][0];
@@ -170,6 +177,9 @@ class TableauRepository {
     $data['Fabien'][2020][0]=$data['Fabien'][2020][0]+$tva_f_2020;
     $data['F+C'][2021][0]=$data['F+C'][2021][0]+$tva_f_2021;
     $data['Fabien'][2021][0]=$data['Fabien'][2021][0]+$tva_f_2021;
+    //nouveau 27-02-22
+    $data['F+C'][2022][0]=$data['F+C'][2022][0]+$tva_f_2022;
+    $data['Fabien'][2022][0]=$data['Fabien'][2022][0]+$tva_f_2022;
 
     foreach ($data as $key_da => $da) {
         $data[$key_da]['total'][0]=0;
