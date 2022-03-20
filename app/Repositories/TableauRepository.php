@@ -96,7 +96,7 @@ class TableauRepository {
         $data[$r['nom']]['id'][0]=$r['id'];
         $data[$r['nom']]['nom'][0]=$r['nom'];
         if ($r['nom']=='WHCrea') {
-         $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->sum('amount'),2);
+         $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->where('depense_par','!=','PV')->sum('amount'),2);
 
         }elseif ($r['nom']=='Commun') {
          $data[$r['nom']][$date][0]=round(llx_bank::whereYear('dateo', '=', $date)->where('depense_par',$r['initial'])->sum('amount'),2);
@@ -206,11 +206,8 @@ class TableauRepository {
 
     $solde['Fabien']['nom']='Fabien';
     $solde['Fabien']['Solde'][0]=round($data['F+C']['total'][0],2);
-    $solde['Fabien']['Solde'][1]='Solde au 14 Août 2021';
+    $solde['Fabien']['Solde'][1]='Solde';
     $solde['Fabien']['Solde'][2]='media/svg/icons/Home/Home.svg';
-    $solde['Fabien']['Dépense'][1][0]=-675.00;
-    $solde['Fabien']['Dépense'][1][1]='Loyer Trimestre 2 - 2020 (HT)';
-    $solde['Fabien']['Dépense'][1][2]='media/svg/icons/Home/Wood-horse.svg';
     $solde['Fabien']['Dépense'][2][0]=-675.00;
     $solde['Fabien']['Dépense'][2][1]='Loyer Trimestre 3 - 2020 (HT)';
     $solde['Fabien']['Dépense'][2][2]='media/svg/icons/Home/Wood-horse.svg';
@@ -220,25 +217,43 @@ class TableauRepository {
     $solde['Fabien']['Dépense'][4][0]=-675.00;
     $solde['Fabien']['Dépense'][4][1]='Loyer Trimestre 1 - 2021 (HT)';
     $solde['Fabien']['Dépense'][4][2]='media/svg/icons/Home/Wood-horse.svg';
-    $solde['Fabien']['Dépense'][5][0]=-450/2;
-    $solde['Fabien']['Dépense'][5][1]='Facture culture comptable - 450€ (HT) - Commun';
+    $solde['Fabien']['Dépense'][5][0]=-720/2;
+    $solde['Fabien']['Dépense'][5][1]='Fac 20220205627 - Régularisation : 1er acompte sur l’exercice 2021 - 720€ (HT) - Commun';
     $solde['Fabien']['Dépense'][5][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Fabien']['Dépense'][6][0]=-720/2;
+    $solde['Fabien']['Dépense'][6][1]='Fac 20220306058 - Solde Bilan 2021 après acomptes 2021 - 720€ (HT) - Commun';
+    $solde['Fabien']['Dépense'][6][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Fabien']['Dépense'][7][0]=-390/2;
+    $solde['Fabien']['Dépense'][7][1]='Fac ... - Assemblée Générale Ordinaire pour l exercice cloturant au 31/12/2021 - 390€ (HT) - Commun';
+    $solde['Fabien']['Dépense'][7][2]='media/svg/icons/Home/Wood-horse.svg';
+
+
 
     //remi
 
     $solde['Remi']['nom']='Remi';
     $solde['Remi']['Solde'][0]=round($data['R+C']['total'][0],2);
-    $solde['Remi']['Solde'][1]='Solde au 14 Août 2021';
+    $solde['Remi']['Solde'][1]='Solde';
     $solde['Remi']['Solde'][2]='media/svg/icons/Home/Home.svg';
-    $solde['Remi']['Dépense'][1][0]=3750.00;
-    $solde['Remi']['Dépense'][1][1]='Depôt de garantie (HT)';
-    $solde['Remi']['Dépense'][1][2]='media/svg/icons/Food/Carrot.svg';
-    $solde['Remi']['Dépense'][2][0]=-2942.00;
-    $solde['Remi']['Dépense'][2][1]='TVA à payer régule Brasserie';
+    $solde['Remi']['Dépense'][1][0]=-720/2;
+    $solde['Remi']['Dépense'][1][1]='Fac 20220205627 - Régularisation : 1er acompte sur l’exercice 2021 - 720€ (HT) - Commun';
+    $solde['Remi']['Dépense'][1][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Remi']['Dépense'][2][0]=-720/2;
+    $solde['Remi']['Dépense'][2][1]='Fac 20220306058 - Solde Bilan 2021 après acomptes 2021 - 720€ (HT) - Commun';
     $solde['Remi']['Dépense'][2][2]='media/svg/icons/Home/Wood-horse.svg';
-    $solde['Remi']['Dépense'][3][0]=-450/2;
-    $solde['Remi']['Dépense'][3][1]='Facture culture comptable - 450€ (HT) - Commun';
+    $solde['Remi']['Dépense'][3][0]=-390/2;
+    $solde['Remi']['Dépense'][3][1]='Fac ... - Assemblée Générale Ordinaire pour l exercice cloturant au 31/12/2021 - 390€ (HT) - Commun';
     $solde['Remi']['Dépense'][3][2]='media/svg/icons/Home/Wood-horse.svg';
+    $solde['Remi']['Dépense'][4][0]=798/4;
+    $solde['Remi']['Dépense'][4][1]='PRLV DIRECTION GENERALE DES FINA - CH2133036333902032 IMPOT CFE -Destinataire:D.G.F.I.P. IMPOT 33032 - 798€ (HT) - 1/4 Remi';
+    $solde['Remi']['Dépense'][4][2]='media/svg/icons/Home/Wood-horse.svg';
+
+    $solde['Remi']['Dépense'][5][0]=0;
+    $solde['Remi']['Dépense'][5][1]='Depôt de garantie 3750.00(HT) - Non récupéré';
+    $solde['Remi']['Dépense'][5][2]='media/svg/icons/Food/Carrot.svg';
+
+
+
 
     foreach ($solde as $key_s => $noms) {
       $solde[$key_s]['Solde_F'][0]=$solde[$key_s]['Solde'][0];
